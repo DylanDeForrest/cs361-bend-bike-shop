@@ -1,39 +1,83 @@
 # Bike
 
+class Pannier
+
+  attr_accessor :capacity, :items
+
+  def initialize(capacity:)
+    @capacity = capacity
+    @items = []
+  end
+
+  def add(item)
+    raise "Pannier is full" if full?
+    @items << item
+    self
+  end
+
+  def remove(item)
+    @items.delete(item)
+    self
+  end
+
+  def remaining_capacity
+    capacity - items.size
+  end
+
+  def full?
+    items.size >= capacity
+  end
+
+  def empty?
+    items.empty?
+  end
+end
+
+
+
 class Bike
 
   STANDARD_WEIGHT = 200 # lbs
   MAX_CARGO_ITEMS = 10
 
-  attr_accessor :id, :color, :price, :weight, :rented, :cargo_contents
+  attr_reader :id, :color, :price, :weight
 
-  def initialize(id, color, price, weight = STANDARD_WEIGHT, rented = false)
+  def initialize(id:, color:, price:, weight: STANDARD_WEIGHT, rented: false,
+                 pannier: Pannier.new(capacity: MAX_CARGO_ITEMS))
     @id = id
     @color = color
     @price = price
     @weight = weight
     @rented = rented
-    @cargo_contents = []
+    @pannier = pannier
+  end
+
+  def rented?
+    @rented
   end
 
   def rent!
-    self.rented = true
+    @rented = true
+    self
   end
 
   def add_cargo(item)
-    self.cargo_contents << item
+    @pannier.add(item)
   end
 
   def remove_cargo(item)
-    self.cargo_contents.remove(item)
+    @pannier.remove(item)
   end
 
   def pannier_capacity
-    MAX_CARGO_ITEMS
+    @pannier.capacity
   end
 
   def pannier_remaining_capacity
-    MAX_CARGO_ITEMS - self.cargo_contents.size
+    @pannier.remaining_capacity
   end
 
+  def cargo_contents
+    @pannier.items.dup
+  end
 end

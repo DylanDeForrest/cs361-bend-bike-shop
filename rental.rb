@@ -1,5 +1,4 @@
 class Rental
-
   attr_reader :bike
 
   def initialize(bike)
@@ -7,11 +6,10 @@ class Rental
   end
 
   def price
-    self.bike.price + self.bike.luggage.items.count * 10
+    bike.price
   end
 
   def weight
-    self.bike.weight + self.bike.luggage.items.count
+    bike.weight
   end
-
 end
